@@ -1,12 +1,12 @@
 # Lazada Product Analysis: Optimizing Revenue and Operational Costs
 
-# Libraries needed for streamlit deployment
-streamlit
-pandas
-numpy
-scikit-learn
-xgboost
-joblib
+## Libraries needed for streamlit deployment
+- streamlit
+- pandas
+- numpy
+- scikit-learn
+- xgboost
+- joblib
 
 ## Table of Contents
 1. [Project Overview](#1-project-overview)
