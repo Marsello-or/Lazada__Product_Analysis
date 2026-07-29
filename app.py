@@ -6,11 +6,13 @@ import joblib
 # --- 1. Load Models and Preprocessors ---
 @st.cache_resource
 def load_sales_model():
-    return joblib.load('xgb_sales_pipeline_full.joblib')
+    # Menambahkan folder 'model/' di depan nama file
+    return joblib.load('model/xgb_sales_pipeline_full.joblib')
 
 @st.cache_resource
 def load_segmentation_model_bundle():
-    return joblib.load('kmeans_lazada_segmentation.joblib')
+    # Menambahkan folder 'model/' di depan nama file
+    return joblib.load('model/kmeans_lazada_segmentation.joblib')
 
 sales_pipeline = load_sales_model()
 segmentation_bundle = load_segmentation_model_bundle()
@@ -89,21 +91,7 @@ if page == "Sales Prediction":
             # Apply feature engineering
             processed_input_df = create_features_for_sales_prediction(input_df)
 
-            # Select features for the model (matching X_train columns)
-            # model_input_features = [col for col in sales_pipeline.named_steps['preprocesssor'].named_transformers_['num'].feature_names_in_] + \
-            #                        [col for col in sales_pipeline.named_steps['preprocesssor'].named_transformers_['cat'].get_feature_names_out(sales_pipeline.named_steps['preprocesssor'].named_transformers_['cat'].feature_names_in_)]
-
-            # Adjust for OneHotEncoder output if needed, assuming the pipeline handles it.
-            # For simplicity, we directly use the original feature names here, assuming pipeline handles OHE internally.
-            # X_predict = processed_input_df[sales_pipeline.named_steps['regressor'].feature_names_in_ if hasattr(sales_pipeline.named_steps['regressor'], 'feature_names_in_') else sales_pipeline.named_steps['preprocesssor'].get_feature_names_out()]
-
             try:
-                # Ensure the order of columns matches the training data
-                # This is a critical step as pipelines expect features in a specific order.
-                # The feature_names_in_ attribute on the regressor step (XGBoost) might not be directly available or representative
-                # of the *original* features before preprocessing. Instead, we should pass the DataFrame
-                # to the full pipeline, and it will handle the preprocessing.
-
                 prediction_log = sales_pipeline.predict(processed_input_df)
                 predicted_sales = np.expm1(prediction_log)[0]
                 st.success(f"Predicted Number of Products Sold: **{predicted_sales:.0f} units**")
