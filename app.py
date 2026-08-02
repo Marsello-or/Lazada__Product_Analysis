@@ -4,12 +4,7 @@ import numpy as np
 import joblib
 
 # --- 1. Page Configuration ---
-st.set_page_config(layout="wide", page_title="Lazada Product Analysis App")
-
-# --- Contextual Introduction ---
-st.markdown("# Lazada Product Performance & Segmentation App")
-st.markdown("This application helps Lazada sellers and strategists maximize Gross Merchandise Value (GMV) and optimize inventory by providing sales predictions and product segmentation with actionable strategies.")
-st.markdown("---")
+st.set_page_config(layout="wide", page_title="Lazada Analytics Dashboard", page_icon="🛍️")
 
 # --- Helper function for feature engineering (must match training) ---
 def create_features_for_prediction(data_dict):
@@ -26,7 +21,7 @@ def create_features_for_prediction(data_dict):
         if lazmall and is_super_seller:
             return 'LazMall_Super'
         elif lazmall:
-            return 'LazMall_only'  # Typo fixed here
+            return 'LazMall_only'
         elif is_super_seller:
             return 'Super_only'
         else:
@@ -34,7 +29,7 @@ def create_features_for_prediction(data_dict):
 
     data['seller_tier'] = data.apply(assign_seller_tier, axis=1)
 
-    # Operational score (assuming seller_ship_on_time and seller_chat_response are 0-100% values)
+    # Operational score
     data['operational_score'] = (data['seller_ship_on_time'] + data['seller_chat_response']) / 2.0
 
     return data
@@ -44,7 +39,6 @@ def create_features_for_prediction(data_dict):
 @st.cache_resource
 def load_sales_prediction_model():
     try:
-        # Added 'model/' path directory
         model = joblib.load('model/xgb_sales_pipeline_full.joblib')
         return model
     except Exception as e:
@@ -54,7 +48,6 @@ def load_sales_prediction_model():
 @st.cache_resource
 def load_segmentation_model():
     try:
-        # Added 'model/' path directory
         bundle = joblib.load('model/kmeans_lazada_segmentation.joblib')
         return bundle
     except Exception as e:
@@ -79,145 +72,172 @@ else:
     segment_names = None
 
 
-# --- Layout: Two Columns for Prediction and Segmentation Inputs ---
-col1, col2 = st.columns(2)
+# --- Sidebar Navigation ---
+st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Lazada_%282019%29.svg/512px-Lazada_%282019%29.svg.png", width=150)
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Select Module:", ["Dashboard Overview", "Sales Prediction", "Product Segmentation"])
 
-with col1:
-    st.header("Sales Prediction Engine")
-    st.markdown("Enter product details to predict potential sales volume.")
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Objective:**\nMaximize GMV and optimize inventory through data-driven operational strategies.")
+
+
+# --- Page 0: Dashboard Overview ---
+if page == "Dashboard Overview":
+    st.title("🛍️ Lazada E-Commerce Intelligence Dashboard")
+    st.markdown("---")
+    st.markdown("Welcome to the **Lazada Product Performance & Segmentation App**.")
+    st.markdown("""
+    This platform acts as the final deployment phase of an end-to-end data analytics project, designed to empower e-commerce strategists and sellers. 
+    
+    ### 📌 Modules Available:
+    *   **📈 Sales Prediction Engine:** Evaluate a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.
+    *   **🔍 Product Segmentation:** Categorize products into business tiers using machine learning, automatically prescribing actionable strategies to optimize inventory and boost Gross Merchandise Value (GMV).
+    
+    👈 **Please select a module from the sidebar to begin your analysis.**
+    """)
+
+
+# --- Page 1: Sales Prediction Engine ---
+elif page == "Sales Prediction":
+    st.title("📈 Sales Prediction Engine")
+    st.markdown("Enter product details below to measure its potential sales volume.")
+    st.markdown("---")
 
     with st.form("sales_prediction_form"):
-        st.subheader("Product Attributes")
-        sp_final_price = st.number_input("Final Price (IDR)", min_value=0.0, value=100000.0, step=1000.0)
-        sp_reviews = st.number_input("Number of Reviews", min_value=0, value=50, step=1)
-        sp_rating = st.slider("Rating (0-5)", min_value=0.0, max_value=5.0, value=4.5, step=0.1)
-        sp_discount_pct = st.slider("Discount Percentage", min_value=0.0, max_value=100.0, value=15.0, step=0.1)
-        sp_color_variant_count = st.number_input("Color Variant Count", min_value=1, value=1, step=1)
+        # Utilizing columns inside the form for a cleaner, wider UI
+        col_prod, col_seller = st.columns(2)
+        
+        with col_prod:
+            st.subheader("📦 Product Attributes")
+            sp_final_price = st.number_input("Final Price (IDR)", min_value=0.0, value=100000.0, step=1000.0)
+            sp_reviews = st.number_input("Number of Reviews", min_value=0, value=50, step=1)
+            sp_rating = st.slider("Rating (0-5)", min_value=0.0, max_value=5.0, value=4.5, step=0.1)
+            sp_discount_pct = st.slider("Discount Percentage", min_value=0.0, max_value=100.0, value=15.0, step=0.1)
+            sp_color_variant_count = st.number_input("Color Variant Count", min_value=1, value=1, step=1)
 
-        st.subheader("Seller Performance")
-        sp_seller_ratings = st.slider("Seller Rating (0-1)", min_value=0.0, max_value=1.0, value=0.95, step=0.01)
-        sp_seller_ship_on_time = st.slider("Seller Ship-On-Time (%)", min_value=0.0, max_value=100.0, value=95.0, step=0.1)
-        sp_seller_chat_response = st.slider("Seller Chat Response (%)", min_value=0.0, max_value=100.0, value=90.0, step=0.1)
-        sp_lazmall = st.checkbox("Is LazMall Seller?")
-        sp_is_super_seller = st.checkbox("Is Super Seller?")
+        with col_seller:
+            st.subheader("🏪 Seller Performance")
+            sp_seller_ratings = st.slider("Seller Rating (0-1)", min_value=0.0, max_value=1.0, value=0.95, step=0.01)
+            sp_seller_ship_on_time = st.slider("Seller Ship-On-Time (%)", min_value=0.0, max_value=100.0, value=95.0, step=0.1)
+            sp_seller_chat_response = st.slider("Seller Chat Response (%)", min_value=0.0, max_value=100.0, value=90.0, step=0.1)
+            st.markdown("<br>", unsafe_allow_html=True) # spacer
+            sp_lazmall = st.checkbox("Is LazMall Seller?")
+            sp_is_super_seller = st.checkbox("Is Super Seller?")
 
-        predict_button = st.form_submit_button("Predict Sales")
+        st.markdown("---")
+        predict_button = st.form_submit_button("Predict Sales Volume", use_container_width=True)
 
-        if predict_button and sales_model:
-            input_data_dict = {
-                'reviews': sp_reviews,
-                'discount_pct': sp_discount_pct,
-                'rating': sp_rating,
-                'final_price': sp_final_price,
-                'seller_ratings': sp_seller_ratings,
-                'seller_ship_on_time': sp_seller_ship_on_time,
-                'seller_chat_response': sp_seller_chat_response,
-                'lazmall': sp_lazmall,
-                'is_super_seller': sp_is_super_seller,
-                'color_variant_count': sp_color_variant_count
-            }
-            try:
-                processed_input = create_features_for_prediction(input_data_dict)
+    if predict_button and sales_model:
+        input_data_dict = {
+            'reviews': sp_reviews,
+            'discount_pct': sp_discount_pct,
+            'rating': sp_rating,
+            'final_price': sp_final_price,
+            'seller_ratings': sp_seller_ratings,
+            'seller_ship_on_time': sp_seller_ship_on_time,
+            'seller_chat_response': sp_seller_chat_response,
+            'lazmall': sp_lazmall,
+            'is_super_seller': sp_is_super_seller,
+            'color_variant_count': sp_color_variant_count
+        }
+        try:
+            processed_input = create_features_for_prediction(input_data_dict)
 
-                model_features = [
-                    'reviews',
-                    'discount_pct',
-                    'rating',
-                    'final_price',
-                    'reviews_per_price',
-                    'operational_score',
-                    'seller_tier',
-                    'color_variant_count'
-                ]
-                
-                for feature in model_features:
-                    if feature not in processed_input.columns:
-                        processed_input[feature] = 0 
+            model_features = [
+                'reviews', 'discount_pct', 'rating', 'final_price', 
+                'reviews_per_price', 'operational_score', 'seller_tier', 'color_variant_count'
+            ]
+            
+            for feature in model_features:
+                if feature not in processed_input.columns:
+                    processed_input[feature] = 0 
 
-                prediction_input = processed_input[model_features]
+            prediction_input = processed_input[model_features]
+            log_prediction = sales_model.predict(prediction_input)[0]
+            predicted_sales = np.expm1(log_prediction)
 
-                # Make prediction
-                log_prediction = sales_model.predict(prediction_input)[0]
+            st.success("Analysis Complete!")
+            st.metric(label="Estimated Sales Volume", value=f"{int(round(predicted_sales)):,} Units")
+            st.info("💡 **Note:** This model does not provide a time-series forecast (e.g., sales per month). Instead, it acts as a static evaluation tool to measure a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.")
 
-                # Reverse transformation
-                predicted_sales = np.expm1(log_prediction)
+        except Exception as e:
+            st.error(f"An error occurred during sales prediction: {e}")
+    elif predict_button:
+        st.warning("Sales prediction model not loaded. Please check the backend.")
 
-                st.metric(label="Predicted Sales (Units)", value=f"{int(round(predicted_sales)):,}")
-                st.info("💡 **Note:** This model does not provide a time-series forecast (e.g., sales per month). Instead, it acts as a static evaluation tool to measure a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.")
 
-            except Exception as e:
-                st.error(f"An error occurred during sales prediction: {e}")
-        elif predict_button:
-            st.warning("Sales prediction model not loaded. Please check the backend.")
-
-with col2:
-    st.header("Product Segmentation")
-    st.markdown("Categorize products to prescribe operational strategies.")
+# --- Page 2: Product Segmentation ---
+elif page == "Product Segmentation":
+    st.title("🔍 Product Segmentation Analyzer")
+    st.markdown("Categorize products based on historical performance to prescribe operational strategies.")
+    st.markdown("---")
 
     with st.form("segmentation_form"):
-        st.subheader("Product Performance Inputs")
-        seg_number_sold = st.number_input("Number Sold (Units)", min_value=0, value=100, step=1)
-        seg_final_price = st.number_input("Final Price (IDR)", min_value=0.0, value=50000.0, step=1000.0)
-        seg_reviews = st.number_input("Number of Reviews", min_value=0, value=20, step=1)
+        col_metrics1, col_metrics2 = st.columns(2)
+        
+        with col_metrics1:
+            st.subheader("Financial Metrics")
+            seg_number_sold = st.number_input("Number Sold (Units)", min_value=0, value=100, step=1)
+            seg_final_price = st.number_input("Final Price (IDR)", min_value=0.0, value=50000.0, step=1000.0)
+            
+        with col_metrics2:
+            st.subheader("Engagement Metrics")
+            seg_reviews = st.number_input("Number of Reviews", min_value=0, value=20, step=1)
 
-        segment_button = st.form_submit_button("Segment Product")
+        st.markdown("---")
+        segment_button = st.form_submit_button("Analyze & Segment Product", use_container_width=True)
 
-        if segment_button and kmeans_model and scaler_segmentation and segmentation_features:
-            try:
-                # Dynamic GMV Calculation
-                seg_gmv = seg_number_sold * seg_final_price
+    if segment_button and kmeans_model and scaler_segmentation and segmentation_features:
+        try:
+            # Dynamic GMV Calculation
+            seg_gmv = seg_number_sold * seg_final_price
 
-                segment_input_data = pd.DataFrame([{
-                    'number_sold': seg_number_sold,
-                    'gmv': seg_gmv,
-                    'final_price': seg_final_price,
-                    'reviews': seg_reviews
-                }])
+            segment_input_data = pd.DataFrame([{
+                'number_sold': seg_number_sold,
+                'gmv': seg_gmv,
+                'final_price': seg_final_price,
+                'reviews': seg_reviews
+            }])
 
-                # Log transform and scale
-                X_log_segment = np.log1p(segment_input_data[segmentation_features])
-                X_scaled_segment = scaler_segmentation.transform(X_log_segment)
+            # Log transform and scale
+            X_log_segment = np.log1p(segment_input_data[segmentation_features])
+            X_scaled_segment = scaler_segmentation.transform(X_log_segment)
 
-                # Predict raw cluster ID
-                raw_cluster_id = kmeans_model.predict(X_scaled_segment)[0]
+            # Predict raw cluster ID
+            raw_cluster_id = kmeans_model.predict(X_scaled_segment)[0]
+            sorted_cluster_id = cluster_mapping.get(raw_cluster_id, raw_cluster_id) 
+            product_segment = segment_names.get(sorted_cluster_id, "Unknown Segment")
 
-                # Map to sorted cluster ID and then to segment name
-                sorted_cluster_id = cluster_mapping.get(raw_cluster_id, raw_cluster_id) 
-                product_segment = segment_names.get(sorted_cluster_id, "Unknown Segment")
+            st.markdown("### 📊 Segmentation Results")
+            
+            # Colored feedback block
+            if "Tier 1" in product_segment or "Tier 2" in product_segment:
+                st.success(f"**Identified Category:** {product_segment}")
+            elif "Tier 3" in product_segment:
+                st.info(f"**Identified Category:** {product_segment}")
+            elif "Tier 4" in product_segment:
+                st.warning(f"**Identified Category:** {product_segment}")
+            elif "Tier 5" in product_segment:
+                st.error(f"**Identified Category:** {product_segment}")
+            else:
+                st.write(f"**Identified Category:** {product_segment}")
+            
+            # GMV Display
+            st.metric("Calculated GMV (Gross Merchandise Value)", f"IDR {seg_gmv:,.0f}")
 
-                st.subheader("Product Segment")
-                if "Tier 1" in product_segment or "Tier 2" in product_segment:
-                    st.success(product_segment)
-                elif "Tier 3" in product_segment:
-                    st.info(product_segment)
-                elif "Tier 4" in product_segment:
-                    st.warning(product_segment)
-                elif "Tier 5" in product_segment:
-                    st.error(product_segment)
-                else:
-                    st.write(product_segment)
-                
-                # Added GMV display
-                st.metric("Calculated GMV", f"IDR {seg_gmv:,.0f}")
+            # Recommendations
+            st.markdown("### 💡 Actionable Recommendations")
+            recommendations = {
+                'Tier 1 (Star Products)': "🌟 **VIP Treatment:** Secure supply chain and FBL. Allocate prime homepage real estate and LazMall banners.",
+                'Tier 2 (High Potential)': "🚀 **Conversion Nudging:** Deploy targeted flash sales or subsidized vouchers to break the conversion bottleneck.",
+                'Tier 3 (Mid-Range)': "🛒 **Boost AOV:** Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase basket size.",
+                'Tier 4 (Slow Movers)': "⚠️ **Algorithm Demotion:** Deprioritize in search. Advise sellers to drop prices to clearance levels to improve conversion rates.",
+                'Tier 5 (Low Potential)': "🛑 **Stop the Bleed:** Revoke subsidized marketing. Force liquidation or return inventory to free up warehouse capacity."
+            }
+            
+            st.write(recommendations.get(product_segment, "No specific recommendations for this segment."))
 
-                st.subheader("Actionable Recommendations")
-                # Restored rich text markdown and emojis
-                recommendations = {
-                    'Tier 1 (Star Products)': "🌟 **VIP Treatment:** Secure supply chain and FBL. Allocate prime homepage real estate and LazMall banners.",
-                    'Tier 2 (High Potential)': "🚀 **Conversion Nudging:** Deploy targeted flash sales or subsidized vouchers to break the conversion bottleneck.",
-                    'Tier 3 (Mid-Range)': "🛒 **Boost AOV:** Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase basket size.",
-                    'Tier 4 (Slow Movers)': "⚠️ **Algorithm Demotion:** Deprioritize in search. Advise sellers to drop prices to clearance levels to improve conversion rates.",
-                    'Tier 5 (Low Potential)': "🛑 **Stop the Bleed:** Revoke subsidized marketing. Force liquidation or return inventory to free up warehouse capacity."
-                }
-                st.markdown(recommendations.get(product_segment, "No specific recommendations for this segment."))
-
-            except Exception as e:
-                st.error(f"An error occurred during product segmentation: {e}")
-        elif segment_button:
-            st.warning("Product segmentation model not loaded. Please check the backend.")
-
-st.markdown("---")
-st.markdown("**Overall App Architecture Notes:**\n" +
-            "- Page configuration is set to `wide` for a better UI experience.\n" +
-            "- Model loading and prediction/segmentation logic are wrapped in `try-except` blocks for error handling.\n" +
-            "- Contextual introduction is provided on the main page.")
+        except Exception as e:
+            st.error(f"An error occurred during product segmentation: {e}")
+    elif segment_button:
+        st.warning("Product segmentation model not loaded. Please check the backend.")
