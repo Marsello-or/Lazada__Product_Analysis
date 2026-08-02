@@ -83,23 +83,23 @@ st.sidebar.markdown("**Objective:**\nMaximize GMV and optimize inventory through
 
 # --- Page 0: Dashboard Overview ---
 if page == "Dashboard Overview":
-    st.title("🛍️ Lazada E-Commerce Intelligence Dashboard")
+    st.title("Lazada E-Commerce Intelligence Dashboard")
     st.markdown("---")
     st.markdown("Welcome to the **Lazada Product Performance & Segmentation App**.")
     st.markdown("""
     This platform acts as the final deployment phase of an end-to-end data analytics project, designed to empower e-commerce strategists and sellers. 
     
     ### 📌 Modules Available:
-    *   **📈 Sales Prediction Engine:** Evaluate a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.
-    *   **🔍 Product Segmentation:** Categorize products into business tiers using machine learning, automatically prescribing actionable strategies to optimize inventory and boost Gross Merchandise Value (GMV).
+    *   **Sales Prediction Engine:** Evaluate a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.
+    *   **Product Segmentation:** Categorize products into business tiers using machine learning, automatically prescribing actionable strategies to optimize inventory and boost Gross Merchandise Value (GMV).
     
-    👈 **Please select a module from the sidebar to begin your analysis.**
+    **Please select a module from the sidebar to begin your analysis.**
     """)
 
 
 # --- Page 1: Sales Prediction Engine ---
 elif page == "Sales Prediction":
-    st.title("📈 Sales Prediction Engine")
+    st.title("Sales Prediction Engine")
     st.markdown("Enter product details below to measure its potential sales volume.")
     st.markdown("---")
 
@@ -108,7 +108,7 @@ elif page == "Sales Prediction":
         col_prod, col_seller = st.columns(2)
         
         with col_prod:
-            st.subheader("📦 Product Attributes")
+            st.subheader("Product Attributes")
             sp_final_price = st.number_input("Final Price (IDR)", min_value=0.0, value=100000.0, step=1000.0)
             sp_reviews = st.number_input("Number of Reviews", min_value=0, value=50, step=1)
             sp_rating = st.slider("Rating (0-5)", min_value=0.0, max_value=5.0, value=4.5, step=0.1)
@@ -116,7 +116,7 @@ elif page == "Sales Prediction":
             sp_color_variant_count = st.number_input("Color Variant Count", min_value=1, value=1, step=1)
 
         with col_seller:
-            st.subheader("🏪 Seller Performance")
+            st.subheader("Seller Performance")
             sp_seller_ratings = st.slider("Seller Rating (0-1)", min_value=0.0, max_value=1.0, value=0.95, step=0.01)
             sp_seller_ship_on_time = st.slider("Seller Ship-On-Time (%)", min_value=0.0, max_value=100.0, value=95.0, step=0.1)
             sp_seller_chat_response = st.slider("Seller Chat Response (%)", min_value=0.0, max_value=100.0, value=90.0, step=0.1)
@@ -208,7 +208,7 @@ elif page == "Product Segmentation":
             sorted_cluster_id = cluster_mapping.get(raw_cluster_id, raw_cluster_id) 
             product_segment = segment_names.get(sorted_cluster_id, "Unknown Segment")
 
-            st.markdown("### 📊 Segmentation Results")
+            st.markdown("### Segmentation Results")
             
             # Colored feedback block
             if "Tier 1" in product_segment or "Tier 2" in product_segment:
@@ -226,13 +226,13 @@ elif page == "Product Segmentation":
             st.metric("Calculated GMV (Gross Merchandise Value)", f"IDR {seg_gmv:,.0f}")
 
             # Recommendations
-            st.markdown("### 💡 Actionable Recommendations")
+            st.markdown("### Actionable Recommendations")
             recommendations = {
-                'Tier 1 (Star Products)': "🌟 **VIP Treatment:** Secure supply chain and FBL. Allocate prime homepage real estate and LazMall banners.",
-                'Tier 2 (High Potential)': "🚀 **Conversion Nudging:** Deploy targeted flash sales or subsidized vouchers to break the conversion bottleneck.",
-                'Tier 3 (Mid-Range)': "🛒 **Boost AOV:** Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase basket size.",
-                'Tier 4 (Slow Movers)': "⚠️ **Algorithm Demotion:** Deprioritize in search. Advise sellers to drop prices to clearance levels to improve conversion rates.",
-                'Tier 5 (Low Potential)': "🛑 **Stop the Bleed:** Revoke subsidized marketing. Force liquidation or return inventory to free up warehouse capacity."
+                'Tier 1 (Star Products)': "**VIP Treatment:** Secure supply chain and FBL. Allocate prime homepage real estate and LazMall banners.",
+                'Tier 2 (High Potential)': "**Conversion Nudging:** Deploy targeted flash sales or subsidized vouchers to break the conversion bottleneck.",
+                'Tier 3 (Mid-Range)': "**Boost AOV:** Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase basket size.",
+                'Tier 4 (Slow Movers)': "**Algorithm Demotion:** Deprioritize in search. Advise sellers to drop prices to clearance levels to improve conversion rates.",
+                'Tier 5 (Low Potential)': "**Stop the Bleed:** Revoke subsidized marketing. Force liquidation or return inventory to free up warehouse capacity."
             }
             
             st.write(recommendations.get(product_segment, "No specific recommendations for this segment."))
