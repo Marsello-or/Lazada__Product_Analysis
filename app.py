@@ -4,7 +4,7 @@ import numpy as np
 import joblib
 
 # --- 1. Page Configuration ---
-st.set_page_config(layout="wide", page_title="Lazada Analytics Dashboard", page_icon="🛍️")
+st.set_page_config(layout="wide", page_title="Lazada Analytics Dashboard", page_icon="📊")
 
 # --- Helper function for feature engineering (must match training) ---
 def create_features_for_prediction(data_dict):
@@ -73,7 +73,7 @@ else:
 
 
 # --- Sidebar Navigation ---
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Lazada_%282019%29.svg/512px-Lazada_%282019%29.svg.png", width=150)
+st.sidebar.image("https://pngtree.com/freepng/graph-analytics-business-diagram-marketing-statistics-tren_5246879.html", width=150)
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Select Module:", ["Dashboard Overview", "Sales Prediction", "Product Segmentation"])
 
