@@ -73,7 +73,7 @@ else:
 
 
 # --- Sidebar Navigation ---
-st.sidebar.image("https://pngtree.com/freepng/graph-analytics-business-diagram-marketing-statistics-tren_5246879.html", width=150)
+st.sidebar.image("https://pngtree.com/freepng/graph-analytics-business-diagram-marketing-statistics-tren_5246879.html", width=50)
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Select Module:", ["Dashboard Overview", "Sales Prediction", "Product Segmentation"])
 
