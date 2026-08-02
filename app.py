@@ -6,7 +6,7 @@ import joblib
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Lazada Analytics Dashboard",
-    page_icon="🛍️",
+    page_icon="📊",
     layout="wide"
 )
 
@@ -39,11 +39,11 @@ if segmentation_bundle:
 
 # Actionable recommendations mapping
 segment_recommendations = {
-    'Tier 1 (Star Products)': "🌟 **Actionable Strategy (VIP Treatment):** Secure the supply chain and FBL (Fulfilled by Lazada) onboarding to guarantee fast shipping. Allocate prime homepage real estate and LazMall banners to maintain market leadership.",
-    'Tier 2 (High Potential)': "🚀 **Actionable Strategy (Conversion Nudging):** These are high-margin items struggling with volume. Deploy targeted flash sales, flexible installment plans (LazPayLater), or subsidized vouchers to break the conversion bottleneck.",
-    'Tier 3 (Mid-Range)': "🛒 **Actionable Strategy (Boost AOV):** These items drive massive traffic but low GMV. Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase the Average Order Value (AOV).",
-    'Tier 4 (Slow Movers)': "⚠️ **Actionable Strategy (Algorithm Demotion):** Deprioritize these items in the search algorithm. Advise sellers to drop prices to clearance levels or delist the SKUs entirely to improve their store's overall conversion rate.",
-    'Tier 5 (Low Potential)': "🛑 **Actionable Strategy (Stop the Bleed):** These items are a liability. Immediately revoke any subsidized marketing or free shipping perks. Force a massive liquidation sale or return inventory to sellers to free up expensive warehouse capacity."
+    'Tier 1 (Star Products)': "**Actionable Strategy (VIP Treatment):** Secure the supply chain and FBL (Fulfilled by Lazada) onboarding to guarantee fast shipping. Allocate prime homepage real estate and LazMall banners to maintain market leadership.",
+    'Tier 2 (High Potential)': "**Actionable Strategy (Conversion Nudging):** These are high-margin items struggling with volume. Deploy targeted flash sales, flexible installment plans (LazPayLater), or subsidized vouchers to break the conversion bottleneck.",
+    'Tier 3 (Mid-Range)': "**Actionable Strategy (Boost AOV):** These items drive massive traffic but low GMV. Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase the Average Order Value (AOV).",
+    'Tier 4 (Slow Movers)': "**Actionable Strategy (Algorithm Demotion):** Deprioritize these items in the search algorithm. Advise sellers to drop prices to clearance levels or delist the SKUs entirely to improve their store's overall conversion rate.",
+    'Tier 5 (Low Potential)': "**Actionable Strategy (Stop the Bleed):** These items are a liability. Immediately revoke any subsidized marketing or free shipping perks. Force a massive liquidation sale or return inventory to sellers to free up expensive warehouse capacity."
 }
 
 
@@ -73,7 +73,7 @@ def create_features_for_sales_prediction(df_input):
 
 
 # --- Streamlit App Layout ---
-st.title("🛍️ Lazada E-Commerce Intelligence Dashboard")
+st.title("Lazada E-Commerce Intelligence Dashboard")
 
 st.markdown("""
 Welcome to the **Lazada E-Commerce Intelligence & Portfolio Optimization Dashboard**.
@@ -88,7 +88,7 @@ page = st.sidebar.radio("Select Analytics Module:", ["Sales Prediction", "Produc
 
 # --- Page 1: Sales Prediction ---
 if page == "Sales Prediction":
-    st.header("📈 Sales Volume Prediction")
+    st.header("Sales Volume Prediction")
     st.write("Enter product specifications and store performance metrics to predict the estimated number of units sold.")
 
     with st.form("sales_prediction_form"):
@@ -154,7 +154,7 @@ if page == "Sales Prediction":
 
 # --- Page 2: Product Segmentation ---
 elif page == "Product Segmentation":
-    st.header("🏷️ Product Clustering & Segmentation")
+    st.header("Product Clustering & Segmentation")
     st.write("Identify the product's segment based on its historical sales performance to receive targeted operational recommendations.")
 
     with st.form("segmentation_form"):
