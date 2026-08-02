@@ -119,6 +119,13 @@ The dataset used for this analysis was sourced from:
 
 * **Impact:** Provides clear operational profiles for each segment, allowing for highly precise marketing and inventory strategies.
 
+### 9.1. Understanding the Cluster Distribution (PCA Visualization)
+During the evaluation of the K-Means clusters using a 2D PCA plot, a distinct clustering behavior was observed, heavily influenced by the zero-inflated nature of e-commerce data and the logarithmic transformations applied.
+
+*   **The Zero-Inflated Vertical Baseline:** Products with 0 sales and 0 reviews form a strict vertical line on the extreme left of the PCA plot (low Principal Component 1). Since their "popularity" variance is exactly zero, the algorithm separates them purely based on Price (Principal Component 2). This creates a clear division between **Tier 4 (Cheap, Unsold)** and **Tier 5 (Expensive, Unsold)**.
+*   **The "Zero-to-One" Phenomenon:** A product can jump drastically from Tier 4 (Slow Movers) directly to Tier 2 (High Potential) with just a single unit sold. This is a mathematical result of the `GMV = Sold * Price` feature engineering combined with the `log1p` transformation. A GMV jump from 0 to 200,000 IDR (which translates to a log jump from 0 to ~12.2) is treated as a massive variance by the distance-based K-Means algorithm.
+*   **Business Justification:** Far from being a flaw, this model behavior perfectly mirrors the harsh reality of e-commerce algorithms. The biggest hurdle for a seller is not scaling from 100 to 101 sales, but breaking the barrier from **0 to 1 sale** to validate the product and trigger platform visibility. The model accurately captures this monumental shift in a product's lifecycle.
+
 ## 10. Final Strategic Recommendations
 
 ### Revenue Optimization Tactics
