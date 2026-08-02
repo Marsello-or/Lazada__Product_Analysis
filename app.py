@@ -64,7 +64,7 @@ def create_features_for_sales_prediction(df_input):
 
 
 # --- Streamlit App Layout ---
-st.title("🛍️ Lazada Product Analytics Dashboard")
+st.title("Lazada Product Analytics Dashboard")
 st.write("Aplikasi ini digunakan untuk memprediksi estimasi penjualan produk dan segmentasi katalog berbasis Machine Learning.")
 
 # Sidebar Navigation
@@ -74,7 +74,7 @@ page = st.sidebar.radio("Pilih Modul Analytics:", ["Sales Prediction", "Product 
 
 # --- Page 1: Sales Prediction ---
 if page == "Sales Prediction":
-    st.header("📈 Sales Volume Prediction")
+    st.header("Sales Volume Prediction")
     st.write("Masukkan spesifikasi dan performa toko untuk memprediksi estimasi unit produk yang akan terjual.")
 
     with st.form("sales_prediction_form"):
@@ -137,7 +137,7 @@ if page == "Sales Prediction":
 
 # --- Page 2: Product Segmentation ---
 elif page == "Product Segmentation":
-    st.header("🏷️ Product Clustering & Segmentation")
+    st.header("Product Clustering & Segmentation")
     st.write("Identifikasi kelompok/segmentasi produk berdasarkan histori performa penjualan.")
 
     with st.form("segmentation_form"):
