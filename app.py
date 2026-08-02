@@ -37,6 +37,15 @@ if segmentation_bundle:
     segment_names_map = segmentation_bundle['segment_names']
     cluster_mapping = segmentation_bundle.get('cluster_mapping', {})
 
+# Actionable recommendations mapping
+segment_recommendations = {
+    'Tier 1 (Star Products)': "🌟 **Actionable Strategy (VIP Treatment):** Secure the supply chain and FBL (Fulfilled by Lazada) onboarding to guarantee fast shipping. Allocate prime homepage real estate and LazMall banners to maintain market leadership.",
+    'Tier 2 (High Potential)': "🚀 **Actionable Strategy (Conversion Nudging):** These are high-margin items struggling with volume. Deploy targeted flash sales, flexible installment plans (LazPayLater), or subsidized vouchers to break the conversion bottleneck.",
+    'Tier 3 (Mid-Range)': "🛒 **Actionable Strategy (Boost AOV):** These items drive massive traffic but low GMV. Implement 'Buy 2 Get 1 Free' or minimum-spend free shipping thresholds to increase the Average Order Value (AOV).",
+    'Tier 4 (Slow Movers)': "⚠️ **Actionable Strategy (Algorithm Demotion):** Deprioritize these items in the search algorithm. Advise sellers to drop prices to clearance levels or delist the SKUs entirely to improve their store's overall conversion rate.",
+    'Tier 5 (Low Potential)': "🛑 **Actionable Strategy (Stop the Bleed):** These items are a liability. Immediately revoke any subsidized marketing or free shipping perks. Force a massive liquidation sale or return inventory to sellers to free up expensive warehouse capacity."
+}
+
 
 # --- 2. Feature Engineering Functions ---
 def create_features_for_sales_prediction(df_input):
@@ -64,8 +73,13 @@ def create_features_for_sales_prediction(df_input):
 
 
 # --- Streamlit App Layout ---
-st.title("Lazada Product Analytics Dashboard")
-st.write("This application predicts estimated product sales volume and segments the catalog using Machine Learning.")
+st.title("🛍️ Lazada E-Commerce Intelligence Dashboard")
+
+st.markdown("""
+Welcome to the **Lazada E-Commerce Intelligence & Portfolio Optimization Dashboard**.
+
+This application is the final deployment phase of an end-to-end data analytics project. The primary objective is to empower e-commerce sellers and platform managers with data-driven insights to maximize Gross Merchandise Value (GMV), optimize discount strategies, and eliminate dead-weight inventory.
+""")
 
 # Sidebar Navigation
 st.sidebar.header("Navigation")
@@ -74,7 +88,7 @@ page = st.sidebar.radio("Select Analytics Module:", ["Sales Prediction", "Produc
 
 # --- Page 1: Sales Prediction ---
 if page == "Sales Prediction":
-    st.header("Sales Volume Prediction")
+    st.header("📈 Sales Volume Prediction")
     st.write("Enter product specifications and store performance metrics to predict the estimated number of units sold.")
 
     with st.form("sales_prediction_form"):
@@ -131,14 +145,17 @@ if page == "Sales Prediction":
                     value=f"{max(0, int(round(predicted_sales))):,} Units"
                 )
                 
+                # Add contextual note
+                st.info("💡 **Note:** This model does not provide a time-series forecast (e.g., sales per month). Instead, it acts as a static evaluation tool to measure a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges. Use this to benchmark if a product's current setup is fully optimized to drive volume.")
+                
             except Exception as e:
                 st.error(f"An error occurred during prediction processing: {e}")
 
 
 # --- Page 2: Product Segmentation ---
 elif page == "Product Segmentation":
-    st.header("Product Clustering & Segmentation")
-    st.write("Identify the product's segment based on its historical sales performance.")
+    st.header("🏷️ Product Clustering & Segmentation")
+    st.write("Identify the product's segment based on its historical sales performance to receive targeted operational recommendations.")
 
     with st.form("segmentation_form"):
         col1, col2 = st.columns(2)
@@ -177,10 +194,22 @@ elif page == "Product Segmentation":
                 product_segment = segment_names_map.get(mapped_cluster_id, f"Cluster {mapped_cluster_id}")
 
                 st.markdown("### Segmentation Results")
-                st.info(f"This product belongs to the segment: **{product_segment}**")
                 
-                # Display calculated GMV metric
+                # Provide custom colored feedback box based on tier logic
+                if "Tier 1" in product_segment or "Tier 2" in product_segment:
+                    st.success(f"This product belongs to the segment: **{product_segment}**")
+                elif "Tier 3" in product_segment:
+                    st.info(f"This product belongs to the segment: **{product_segment}**")
+                elif "Tier 4" in product_segment:
+                    st.warning(f"This product belongs to the segment: **{product_segment}**")
+                else:
+                    st.error(f"This product belongs to the segment: **{product_segment}**")
+                
                 st.metric("Calculated GMV (Gross Merchandise Value)", f"IDR {gmv_seg:,.0f}")
+                
+                # Display dynamic actionable recommendation
+                recommendation = segment_recommendations.get(product_segment, "No specific recommendation available for this tier.")
+                st.markdown(recommendation)
                 
             except Exception as e:
                 st.error(f"An error occurred during segmentation processing: {e}")
