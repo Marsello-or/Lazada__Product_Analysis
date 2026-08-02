@@ -151,7 +151,7 @@ with col1:
             st.warning("Sales prediction model not loaded. Please check the backend.")
 
 with col2:
-    st.header("🔍 Product Segmentation")
+    st.header("Product Segmentation")
     st.markdown("Categorize products to prescribe operational strategies.")
 
     with st.form("segmentation_form"):
