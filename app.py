@@ -73,7 +73,7 @@ else:
 
 
 # --- Sidebar Navigation ---
-st.sidebar.image("https://toppng.com/uploads/preview/shopping-website-development-ecommerce-website-11563204359xi6tqmoycq.png", width=130)
+st.sidebar.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuX7zq4jb2PTq70xxEdVE1B4eX38g5XKNnxs9z2Rayoxa2AZrKGDOq_ePP&s=10", width=130)
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Select Module:", ["Dashboard Overview", "Sales Prediction", "Product Segmentation"])
 
