@@ -89,7 +89,7 @@ if page == "Dashboard Overview":
     st.markdown("""
     This platform acts as the final deployment phase of an end-to-end data analytics project, designed to empower e-commerce strategists and sellers. 
     
-    ### 📌 Modules Available:
+    ### Modules Available:
     *   **Sales Prediction Engine:** Evaluate a product's potential to become a best-seller based on its current pricing strategy, social proof, and operational ecosystem badges.
     *   **Product Segmentation:** Categorize products into business tiers using machine learning, automatically prescribing actionable strategies to optimize inventory and boost Gross Merchandise Value (GMV).
     
@@ -168,7 +168,7 @@ elif page == "Sales Prediction":
 
 # --- Page 2: Product Segmentation ---
 elif page == "Product Segmentation":
-    st.title("🔍 Product Segmentation Analyzer")
+    st.title("Product Segmentation Analyzer")
     st.markdown("Categorize products based on historical performance to prescribe operational strategies.")
     st.markdown("---")
 
